@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoganandha S — Cloud & DevOps Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07090f;
+  --surface:  #0d1117;
+  --surface2: #161b22;
+  --border:   rgba(48,201,120,0.15);
+  --green:    #30c978;
+  --green2:   #1aff8c;
+  --dim:      #8b949e;
+  --text:     #cdd9e5;
+  --amber:    #e3b341;
+  --blue:     #58a6ff;
+  --red:      #ff7b72;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Cursor ── */
+#cur { width:8px;height:8px;background:var(--green);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transition:transform .1s;mix-blend-mode:screen; }
+#cur-ring { width:32px;height:32px;border:1px solid rgba(48,201,120,.4);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:transform .18s ease; }
+
+/* ── Scanline overlay ── */
+body::before {
+  content:'';position:fixed;inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
+  pointer-events:none;z-index:1;
+}
+
+/* ── Grid bg ── */
+body::after {
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(48,201,120,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(48,201,120,.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── Nav ── */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 56px;
+  background:rgba(7,9,15,.88);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo {
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;color:var(--green);
+  letter-spacing:1px;
+}
+.nav-logo span{color:var(--dim);}
+.blink{animation:blink 1.1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a {
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--dim);text-decoration:none;letter-spacing:2px;
+  text-transform:uppercase;transition:color .2s;position:relative;
+}
+.nav-links a::before{content:'./';color:var(--green);opacity:0;transition:opacity .2s;}
+.nav-links a:hover{color:var(--green);}
+.nav-links a:hover::before{opacity:1;}
+
+/* ── Hero ── */
+.hero {
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:120px 56px 80px;
+  position:relative;z-index:2;overflow:hidden;
+}
+
+/* Glow blobs */
+.blob {position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.blob1{width:500px;height:500px;background:radial-gradient(circle,rgba(48,201,120,.1),transparent 70%);top:-80px;right:-80px;animation:drift 9s ease-in-out infinite;}
+.blob2{width:350px;height:350px;background:radial-gradient(circle,rgba(88,166,255,.07),transparent 70%);bottom:80px;left:60px;animation:drift 12s ease-in-out infinite reverse;}
+@keyframes drift{0%,100%{transform:translate(0,0);}50%{transform:translate(24px,-18px);}}
+
+.hero-eyebrow {
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--green);letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+  opacity:0;animation:fadeUp .7s forwards .1s;
+}
+.hero-eyebrow::before{content:'';width:28px;height:1px;background:var(--green);}
+
+.hero-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(64px,10vw,130px);
+  line-height:.92;letter-spacing:2px;
+  margin-bottom:8px;
+  opacity:0;animation:fadeUp .7s forwards .25s;
+}
+.hero-name .line1{color:var(--text);display:block;}
+.hero-name .line2{color:var(--green);display:block;}
+
+.hero-role {
+  font-family:'JetBrains Mono',monospace;font-size:14px;
+  color:var(--dim);margin-bottom:40px;letter-spacing:1px;
+  opacity:0;animation:fadeUp .7s forwards .4s;
+}
+.hero-role em{color:var(--amber);font-style:normal;}
+
+.hero-summary {
+  font-size:16px;color:var(--dim);max-width:560px;
+  line-height:1.75;font-weight:300;margin-bottom:48px;
+  opacity:0;animation:fadeUp .7s forwards .55s;
+}
+
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp .7s forwards .7s;}
+.btn-p {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 28px;background:var(--green);color:var(--bg);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;text-decoration:none;font-weight:700;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:all .2s;
+}
+.btn-p:hover{background:#fff;transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--green);}
+.btn-g {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 28px;border:1px solid var(--border);color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;text-decoration:none;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:all .2s;
+}
+.btn-g:hover{border-color:var(--green);color:var(--green);}
+
+/* Stats strip */
+.hero-stats {
+  position:absolute;right:56px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:28px;
+  opacity:0;animation:fadeUp .7s forwards .85s;
+}
+.stat{text-align:right;border-right:2px solid var(--border);padding-right:18px;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--green);line-height:1;}
+.stat-l{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin-top:2px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── Sections ── */
+section{padding:90px 56px;position:relative;z-index:2;}
+.sec-label {
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--green);letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:10px;
+}
+.sec-label::after{content:'';flex:1;max-width:48px;height:1px;background:var(--green);}
+.sec-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,60px);letter-spacing:1px;
+  margin-bottom:56px;color:var(--text);
+}
+
+/* ── Skills ── */
+#skills{background:var(--surface);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:2px;}
+.sk-card {
+  background:var(--bg);padding:32px;
+  border:1px solid transparent;transition:all .3s;position:relative;overflow:hidden;
+}
+.sk-card::after {
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .3s;
+}
+.sk-card:hover{border-color:var(--border);}
+.sk-card:hover::after{transform:scaleX(1);}
+.sk-icon{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);letter-spacing:3px;margin-bottom:12px;opacity:.7;}
+.sk-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:16px;color:var(--text);}
+.sk-tags{display:flex;flex-wrap:wrap;gap:7px;}
+.tag {
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  padding:4px 10px;border:1px solid rgba(48,201,120,.2);
+  color:var(--dim);letter-spacing:.5px;transition:all .2s;
+}
+.sk-card:hover .tag{border-color:rgba(48,201,120,.4);color:var(--text);}
+
+/* ── Experience ── */
+#experience{background:var(--bg);}
+.timeline{position:relative;padding-left:36px;}
+.timeline::before {
+  content:'';position:absolute;left:0;top:6px;bottom:0;width:1px;
+  background:linear-gradient(to bottom,var(--green),rgba(48,201,120,.2),transparent);
+}
+.exp-item {
+  position:relative;margin-bottom:56px;
+  padding:32px;background:var(--surface);
+  border:1px solid var(--border);transition:all .3s;
+}
+.exp-item::before {
+  content:'';position:absolute;left:-42px;top:36px;
+  width:11px;height:11px;background:var(--green);border-radius:50%;
+  box-shadow:0 0 0 4px rgba(48,201,120,.15);
+}
+.exp-item:hover{border-color:rgba(48,201,120,.4);transform:translateX(4px);box-shadow:-3px 0 0 var(--green);}
+.exp-period{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:10px;}
+.exp-role{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--text);margin-bottom:2px;}
+.exp-company{font-size:13px;color:var(--dim);margin-bottom:20px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;}
+.exp-company em{color:var(--amber);font-style:normal;}
+.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.exp-bullets li{font-size:13.5px;color:var(--dim);padding-left:16px;position:relative;line-height:1.65;}
+.exp-bullets li::before{content:'▸';position:absolute;left:0;color:var(--green);font-size:10px;top:3px;}
+.exp-bullets li strong{color:var(--text);font-weight:500;}
+
+/* ── Projects ── */
+#projects{background:var(--surface);}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;}
+.proj-card {
+  padding:28px;background:var(--bg);
+  border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s;
+}
+.proj-card::before {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--blue));
+  transform:scaleX(0);transform-origin:left;transition:transform .3s;
+}
+.proj-card:hover{border-color:rgba(48,201,120,.4);transform:translateY(-4px);}
+.proj-card:hover::before{transform:scaleX(1);}
+.proj-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);opacity:.5;margin-bottom:10px;letter-spacing:2px;}
+.proj-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;color:var(--text);margin-bottom:10px;line-height:1.2;}
+.proj-desc{font-size:13px;color:var(--dim);line-height:1.65;margin-bottom:16px;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.proj-tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;background:rgba(48,201,120,.08);color:var(--green);letter-spacing:.5px;}
+
+/* ── Certs ── */
+#certs{background:var(--bg);}
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.cert-card {
+  padding:24px;background:var(--surface);border:1px solid var(--border);
+  position:relative;overflow:hidden;transition:all .3s;
+}
+.cert-corner {
+  position:absolute;top:0;right:0;width:32px;height:32px;
+  background:var(--green);clip-path:polygon(100% 0,0 0,100% 100%);
+  opacity:.25;transition:opacity .3s;
+}
+.cert-card:hover{border-color:var(--green);transform:translateY(-3px);}
+.cert-card:hover .cert-corner{opacity:.6;}
+.cert-name{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;color:var(--text);margin-bottom:6px;line-height:1.25;}
+.cert-issuer{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1px;}
+
+/* ── Contact ── */
+#contact{background:var(--surface);}
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.contact-intro{font-size:15px;color:var(--dim);line-height:1.8;margin-bottom:36px;font-weight:300;}
+.contact-links{display:flex;flex-direction:column;gap:12px;}
+.contact-link {
+  display:flex;align-items:center;gap:14px;padding:14px 18px;
+  border:1px solid var(--border);text-decoration:none;color:var(--text);transition:all .2s;
+}
+.contact-link:hover{border-color:var(--green);color:var(--green);background:rgba(48,201,120,.04);}
+.cl-icon{font-family:'JetBrains Mono',monospace;font-size:13px;width:18px;text-align:center;color:var(--green);}
+.cl-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);}
+.cl-val{margin-left:auto;font-size:13px;color:var(--dim);}
+.contact-link:hover .cl-val{color:var(--green);}
+
+.avail-box {
+  padding:28px;background:var(--bg);
+  border:1px solid var(--border);border-left:3px solid var(--green);
+}
+.avail-dot{display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%;margin-right:8px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4);}50%{box-shadow:0 0 0 8px rgba(34,197,94,0);}}
+.avail-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);margin-bottom:8px;}
+.avail-body{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:18px;}
+.avail-stack{display:flex;flex-wrap:wrap;gap:6px;}
+.avail-tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid rgba(48,201,120,.2);color:var(--green);letter-spacing:.5px;}
+
+/* ── Footer ── */
+footer {
+  padding:32px 56px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:2;
+}
+.ft-copy{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;}
+.ft-loc{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);}
+
+/* ── Reveal ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── Terminal window (decorative) ── */
+.term-window {
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:0;overflow:hidden;margin-bottom:48px;
+  max-width:520px;opacity:0;animation:fadeUp .7s forwards 1s;
+}
+.term-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);}
+.term-dot{width:10px;height:10px;border-radius:50%;}
+.term-dot.r{background:#ff5f57;}.term-dot.y{background:#ffbd2e;}.term-dot.g{background:#28ca41;}
+.term-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin:0 auto;letter-spacing:1px;}
+.term-body{padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;}
+.t-prompt{color:var(--green);}
+.t-cmd{color:var(--text);}
+.t-out{color:var(--dim);}
+.t-val{color:var(--amber);}
+.t-hi{color:var(--green2);}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  section,.hero{padding:70px 20px;}
+  .hero-stats{display:none;}
+  .contact-wrap{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:10px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">~/yoganandha<span> $ </span><span class="blink">▋</span></div>
+  <ul class="nav-links">
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#certs">certs</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+
+  <div class="hero-eyebrow">Cloud & DevOps Engineer · 3.5 Years</div>
+  <h1 class="hero-name">
+    <span class="line1">Yoganandha</span>
+    <span class="line2">S</span>
+  </h1>
+  <p class="hero-role">
+    <em>AWS</em> · EKS · Terraform · Kubernetes · CI/CD · DevSecOps
+  </p>
+  <p class="hero-summary">
+    Automating and managing production-grade cloud infrastructure on AWS and Azure.
+    Specialising in Kubernetes orchestration, real-time data pipelines (Kafka · Spark · Redis),
+    and end-to-end DevSecOps — delivering 99.9%+ availability for healthcare-grade systems.
+  </p>
+  <div class="hero-cta">
+    <a href="mailto:yoganandhayogi715@gmail.com" class="btn-p">↗ Get In Touch</a>
+    <a href="https://linkedin.com/in/yoganandhas" target="_blank" class="btn-g">LinkedIn Profile</a>
+    <a href="https://github.com/yoganandhas" target="_blank" class="btn-g">GitHub</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">3.5</div><div class="stat-l">Years exp.</div></div>
+    <div class="stat"><div class="stat-n">15+</div><div class="stat-l">Microservices</div></div>
+    <div class="stat"><div class="stat-n">40%</div><div class="stat-l">Less manual ops</div></div>
+    <div class="stat"><div class="stat-n">99.9</div><div class="stat-l">% Availability</div></div>
+  </div>
+</section>
+
+<!-- TERMINAL ABOUT -->
+<section style="background:var(--surface);padding:70px 56px 20px;" id="about">
+  <div class="term-window reveal">
+    <div class="term-bar">
+      <div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div>
+      <span class="term-title">yoganandha@devops ~ bash</span>
+    </div>
+    <div class="term-body">
+      <div><span class="t-prompt">$ </span><span class="t-cmd">kubectl get engineer yoganandha -o yaml</span></div>
+      <div class="t-out">---</div>
+      <div><span class="t-out">name: </span><span class="t-val">Yoganandha S</span></div>
+      <div><span class="t-out">location: </span><span class="t-val">Sriperumbudur, Tamil Nadu</span></div>
+      <div><span class="t-out">experience: </span><span class="t-val">3 years 5 months</span></div>
+      <div><span class="t-out">current_role: </span><span class="t-val">Cloud & DevOps Engineer</span></div>
+      <div><span class="t-out">cloud: </span><span class="t-hi">[AWS, Azure]</span></div>
+      <div><span class="t-out">orchestration: </span><span class="t-hi">[EKS, Kubernetes, Helm]</span></div>
+      <div><span class="t-out">iac: </span><span class="t-hi">[Terraform, CloudFormation]</span></div>
+      <div><span class="t-out">streaming: </span><span class="t-hi">[Kafka, Spark, Redis]</span></div>
+      <div><span class="t-out">status: </span><span style="color:#22c55e;">● open_to_opportunities</span></div>
+      <div><span class="t-prompt">$ </span><span class="t-cmd">_</span><span class="blink">▋</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" style="background:var(--surface);padding-top:20px;">
+  <div class="sec-label">Technical Arsenal</div>
+  <h2 class="sec-title">What I Build With</h2>
+  <div class="skills-grid reveal">
+    <div class="sk-card">
+      <div class="sk-icon">// 01</div>
+      <div class="sk-name">Cloud Platforms</div>
+      <div class="sk-tags">
+        <span class="tag">AWS EKS</span><span class="tag">EC2</span><span class="tag">ECR</span>
+        <span class="tag">VPC</span><span class="tag">IAM</span><span class="tag">S3</span>
+        <span class="tag">ALB/NLB</span><span class="tag">EBS/EFS</span><span class="tag">Azure</span>
+        <span class="tag">CloudFormation</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 02</div>
+      <div class="sk-name">Containers & Orchestration</div>
+      <div class="sk-tags">
+        <span class="tag">Kubernetes</span><span class="tag">Docker</span><span class="tag">Helm</span>
+        <span class="tag">Strimzi</span><span class="tag">StatefulSets</span><span class="tag">RBAC</span>
+        <span class="tag">HPA</span><span class="tag">YAML</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 03</div>
+      <div class="sk-name">IaC & GitOps</div>
+      <div class="sk-tags">
+        <span class="tag">Terraform</span><span class="tag">CloudFormation</span>
+        <span class="tag">GitOps</span><span class="tag">Modules</span><span class="tag">State Mgmt</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 04</div>
+      <div class="sk-name">CI/CD & DevSecOps</div>
+      <div class="sk-tags">
+        <span class="tag">GitHub Actions</span><span class="tag">Jenkins</span>
+        <span class="tag">Azure DevOps</span><span class="tag">Trivy</span>
+        <span class="tag">SonarQube</span><span class="tag">Redgate</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 05</div>
+      <div class="sk-name">Observability</div>
+      <div class="sk-tags">
+        <span class="tag">Prometheus</span><span class="tag">Grafana</span>
+        <span class="tag">Alertmanager</span><span class="tag">Fluent Bit</span>
+        <span class="tag">Grafana Loki</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 06</div>
+      <div class="sk-name">Data & Streaming</div>
+      <div class="sk-tags">
+        <span class="tag">Apache Kafka</span><span class="tag">Apache Spark</span>
+        <span class="tag">Redis</span><span class="tag">MQTT</span><span class="tag">Event-Driven</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 07</div>
+      <div class="sk-name">Scripting & OS</div>
+      <div class="sk-tags">
+        <span class="tag">Bash</span><span class="tag">Python</span>
+        <span class="tag">Shell</span><span class="tag">Linux</span>
+      </div>
+    </div>
+    <div class="sk-card">
+      <div class="sk-icon">// 08</div>
+      <div class="sk-name">Databases & Release</div>
+      <div class="sk-tags">
+        <span class="tag">Redgate</span><span class="tag">DB Version Control</span>
+        <span class="tag">Release Automation</span><span class="tag">Rollback</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sec-label">Career Timeline</div>
+  <h2 class="sec-title">Where I've Shipped</h2>
+  <div class="timeline">
+
+    <div class="exp-item reveal">
+      <div class="exp-period">APR 2024 — PRESENT · CURRENT</div>
+      <div class="exp-role">Cloud & DevOps Engineer</div>
+      <div class="exp-company">Alphind Healthcare · <em>Chennai</em> · Healthcare Technology Domain</div>
+      <ul class="exp-bullets">
+        <li>Designed secure <strong>AWS infrastructure</strong> (VPC, IAM, EKS, EC2, ECR, ALB/NLB) supporting highly available production environments with <strong>99.9%+ uptime</strong></li>
+        <li>Provisioned and operated <strong>Amazon EKS clusters</strong> across dev, staging, and production with zero-downtime upgrades and node group management</li>
+        <li>Implemented <strong>Terraform IaC</strong> reducing manual provisioning effort by <strong>~40%</strong> across all cloud and Kubernetes resources</li>
+        <li>Deployed and managed <strong>15+ containerised microservices</strong> and distributed workloads (Kafka, Spark, Redis) on EKS at scale</li>
+        <li>Built <strong>CI/CD pipelines</strong> (GitHub Actions + Jenkins) with Trivy + SonarQube DevSecOps gates across all environments</li>
+        <li>Designed observability stack with <strong>Prometheus, Alertmanager & Grafana</strong>; built centralised logging via Fluent Bit + Loki</li>
+        <li>Deployed <strong>Kafka clusters via Strimzi Operator</strong> (CRDs) and Spark workloads via Helm for real-time streaming pipelines</li>
+        <li>Provisioned and scaled <strong>Redis clusters</strong> (Helm + StatefulSets) ensuring sub-millisecond latency for healthcare caching</li>
+        <li>Led containerisation of legacy apps, cutting environment-related incidents by <strong>~30%</strong></li>
+        <li>Optimised AWS costs via S3 lifecycle policies, EC2 right-sizing and resource tuning</li>
+      </ul>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-period">OCT 2022 — MAR 2024</div>
+      <div class="exp-role">Junior DevOps Engineer</div>
+      <div class="exp-company">Alphind Software Solutions · <em>Chennai</em> · Software Services Domain</div>
+      <ul class="exp-bullets">
+        <li>Maintained and optimised <strong>CI/CD pipelines in Azure DevOps</strong> enabling reliable automated deployments across multiple environments</li>
+        <li>Managed end-to-end <strong>production release cycles</strong> with deployment strategies, validation checks, and rollback mechanisms</li>
+        <li>Provisioned and configured <strong>SIT environments</strong> on Windows servers for client testing and pre-production validation</li>
+        <li>Designed <strong>backend CI/CD pipelines using Redgate</strong>, automating database deployments and enabling DB version control</li>
+        <li>Monitored production systems with <strong>proactive incident management</strong>, maintaining service reliability and minimal downtime</li>
+        <li>Performed post-patch validation and health checks after Windows updates, ensuring zero disruption to hosted applications</li>
+        <li>Automated repetitive deployment tasks, reducing manual errors and improving overall operational efficiency</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-label">Work Samples</div>
+  <h2 class="sec-title">Projects</h2>
+  <div class="proj-grid reveal">
+
+    <div class="proj-card">
+      <div class="proj-num">// 01</div>
+      <div class="proj-title">ProdReady — Cloud-Native DevOps Platform on AWS</div>
+      <div class="proj-desc">End-to-end DevOps reference platform: Flask app on EKS (Terraform-provisioned), GitHub Actions CI/CD with Trivy + SonarQube security gates, Prometheus/Grafana observability, Fluent Bit + Loki logging — all on AWS Free Tier.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">EKS</span><span class="proj-tag">Terraform</span>
+        <span class="proj-tag">GitHub Actions</span><span class="proj-tag">Trivy</span>
+        <span class="proj-tag">Helm</span><span class="proj-tag">Prometheus</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">// 02</div>
+      <div class="proj-title">Automated CI/CD Pipeline with Docker on Linux</div>
+      <div class="proj-desc">Designed scalable CI/CD pipelines with GitHub Actions to automate Docker container deployments on Linux servers. Reduced manual intervention, accelerated release cycles by 30%, and increased deployment efficiency by 25%.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">GitHub Actions</span><span class="proj-tag">Docker</span>
+        <span class="proj-tag">Linux</span><span class="proj-tag">CI/CD</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">// 03</div>
+      <div class="proj-title">Kubernetes Deployment on AWS EKS</div>
+      <div class="proj-desc">Deployed a containerised application on Amazon EKS with Kubernetes manifests (Deployments, Services, ConfigMaps), LoadBalancer ingress, and HPA scaling. Achieved high availability using Kubernetes-native features.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">EKS</span><span class="proj-tag">Kubernetes</span>
+        <span class="proj-tag">ConfigMaps</span><span class="proj-tag">HPA</span>
+        <span class="proj-tag">LoadBalancer</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-num">// 04</div>
+      <div class="proj-title">Website Hosting & DNS Configuration</div>
+      <div class="proj-desc">Deployed and configured a static website on GoDaddy with A/CNAME DNS mapping, cPanel file management, and optimised hosting environment — achieving 99% uptime and improved user accessibility.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">DNS</span><span class="proj-tag">cPanel</span>
+        <span class="proj-tag">HTML/CSS</span><span class="proj-tag">GoDaddy</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certs" style="background:var(--surface);">
+  <div class="sec-label">Credentials</div>
+  <h2 class="sec-title">Certifications</h2>
+  <div class="certs-grid reveal">
+    <div class="cert-card">
+      <div class="cert-corner"></div>
+      <div class="cert-name">Microsoft Azure Administrator</div>
+      <div class="cert-issuer">MICROSOFT · AZ-104</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-corner"></div>
+      <div class="cert-name">AWS Fundamentals</div>
+      <div class="cert-issuer">GREAT LEARNING</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-corner"></div>
+      <div class="cert-name">Azure Fundamentals</div>
+      <div class="cert-issuer">UDEMY</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-corner"></div>
+      <div class="cert-name">Python Programming</div>
+      <div class="cert-issuer">IIITDMJ JABALPUR</div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-corner"></div>
+      <div class="cert-name">Web Designing</div>
+      <div class="cert-issuer">BESANT TECHNOLOGIES</div>
+    </div>
+    <div class="cert-card" style="border-color:rgba(48,201,120,.35);background:rgba(48,201,120,.04);">
+      <div class="cert-corner" style="opacity:.6;"></div>
+      <div class="cert-name" style="color:var(--green);">AWS SAA-C03</div>
+      <div class="cert-issuer" style="color:var(--amber);">IN PROGRESS · 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-label">Let's Connect</div>
+  <h2 class="sec-title">Get In Touch</h2>
+  <div class="contact-wrap reveal">
+    <div>
+      <p class="contact-intro">
+        Open to Cloud & DevOps engineering roles — full-time, contract, or consulting.
+        If you're building infrastructure that needs to scale, stay secure, and run reliably, let's talk.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:yoganandhayogi715@gmail.com" class="contact-link">
+          <span class="cl-icon">@</span>
+          <span class="cl-label">Email</span>
+          <span class="cl-val">yoganandhayogi715@gmail.com</span>
+        </a>
+        <a href="tel:+918680834602" class="contact-link">
+          <span class="cl-icon">#</span>
+          <span class="cl-label">Phone</span>
+          <span class="cl-val">+91 8680834602</span>
+        </a>
+        <a href="https://linkedin.com/in/yoganandhas" target="_blank" class="contact-link">
+          <span class="cl-icon">in</span>
+          <span class="cl-label">LinkedIn</span>
+          <span class="cl-val">linkedin.com/in/yoganandhas</span>
+        </a>
+        <a href="https://github.com/yoganandhas" target="_blank" class="contact-link">
+          <span class="cl-icon">gh</span>
+          <span class="cl-label">GitHub</span>
+          <span class="cl-val">github.com/yoganandhas</span>
+        </a>
+        <div class="contact-link" style="cursor:default;">
+          <span class="cl-icon">📍</span>
+          <span class="cl-label">Location</span>
+          <span class="cl-val">Sriperumbudur, Tamil Nadu, India</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="avail-box">
+      <div class="avail-title"><span class="avail-dot"></span>Open to Opportunities</div>
+      <p class="avail-body">
+        3.5 years of hands-on AWS + Kubernetes production experience in healthcare infrastructure.
+        Skilled across the full DevOps lifecycle — from Terraform provisioning to Grafana dashboards.
+        Fluent in English, Tamil, and Telugu.
+      </p>
+      <div class="avail-stack">
+        <span class="avail-tag">AWS</span><span class="avail-tag">EKS</span>
+        <span class="avail-tag">Terraform</span><span class="avail-tag">Kubernetes</span>
+        <span class="avail-tag">CI/CD</span><span class="avail-tag">DevSecOps</span>
+        <span class="avail-tag">Kafka</span><span class="avail-tag">Prometheus</span>
+        <span class="avail-tag">Helm</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-copy">© 2025 Yoganandha S · Cloud & DevOps Engineer</div>
+  <div class="ft-loc">📍 Sriperumbudur, India</div>
+</footer>
+
+<script>
+// Cursor
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.transform=`translate(${mx-4}px,${my-4}px)`;
+});
+(function loop(){
+  rx+=(mx-rx-16)*.12; ry+=(my-ry-16)*.12;
+  ring.style.transform=`translate(${rx}px,${ry}px)`;
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='52px';ring.style.height='52px';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='32px';ring.style.height='32px';});
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'), i*60);
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
